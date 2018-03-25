@@ -51,13 +51,13 @@
         <hr>
         <div class="container">
             <div class="row">
-                <div class="col-12" id="timer_display">
+                <div class="col-12" id="countdown_display">
                     <p> This is where the timer will go </p>
                 </div>
                 <div class="col-12">
                     <div class="alert alert-secondary" role="alert" id="q_display">
-                         <p> This is where the question will go </p>
-                    </div>                 
+                        <p> This is where the question will go </p>
+                    </div>
                 </div>
                 <div class="col-12" id="ans_display">
                     <p> This is where the different answers will go
@@ -85,41 +85,163 @@
         </div>
     </div>
 
-
-
-
-
-
-
-
-
-
     <script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+        //  Click events for buttons
+        window.onload = function () {
+            $("#start").click(TriviaGame.start);
+            $("#start_bottom").click(TriviaGame.start);
+            $("#pause").click(TriviaGame.pause);
+            $("#end").click();
+            $("#restart").click();
+        }
+        // *******CACHE DUMB***************
+        var intervalId;
+        var clockRunning = false;
+        var countDonwNumber = 5;
+
+
+
+
+        var TriviaGame = {
+
+            //Function Initiates the countdown.
+            start: function () {
+                if (!clockRunning) {
+                    intervalId = setInterval(TriviaGame.decrement, 1000);
+                }
+            },
+
+            decrement: function () {
+                countDonwNumber--;
+                $("#countdown_display").html("<h3>" + countDonwNumber + "</h3>");
+                if (countDonwNumber === 0) {
+                    TriviaGame.stop();
+                    console.log("ON");
+                }
+            },
+            //function stops the clock from running 
+            pause: function () {
+                clearInterval(intervalId);
+                clockRunning = false;
+            },
+
+            stop: function () {
+                clearInterval(intervalId);
+                console.log("STOP!")
+            },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            fiends: function () {
+
+            },
+            Q1: {
+                question: "What is Ross' career?",
+                p_ans: ["Veterinarian", "Architect", "Paleontologist", "Author"],
+                c_ans: "Paleontologist"
+            },
+            Q2: {
+                question: "Which friend left their fiancé at the altar on their wedding day?",
+                p_ans: ["Phoebe", "Chandler", "Rachel", "Monica"],
+                c_ans: "Rachel"
+            },
+            Q3: {
+                question: "How many times has Ross been married?",
+                p_ans: ["Never", "2", "3", "1"],
+                c_ans: "3"
+            },
+            Q4: {
+                question: "Who was the only character out of the six friends who never married?",
+                p_ans: ["Phoebe", "Joey", "Chandler", "Monica"],
+                c_ans: "Joey"
+            },
+            Q5: {
+                question: "Which Friend did Gunther have a crush on?",
+                p_ans: ["Phoebe", "Chandler", "Monica", "Rachel"],
+                c_ans: "Rachel"
+            },
+            Q6: {
+                question: "Which Friend dated a girl with a prosthetic leg?",
+                p_ans: ["Joey", "both Joey and Chandler", "Chandler", "Ross"],
+                c_ans: "Both Joey and Chandler"
+            },
+            Q7: {
+                question: "What is the name of Ross' monkey?",
+                p_ans: ["Marvel", "Marcel", "Mark", "Hammy"],
+                c_ans: "Marcel"
+            },
+            Q8: {
+                question: "Which of the following was never a romantic couple?",
+                p_ans: ["Ross & Monica", "Phoebe & Mike", "Monica & Chandler", "Ross & Rachel"],
+                c_ans: "Phoebe & Mike"
+            },
+            Q9: {
+                question: "Which Friend did Phoebe try to teach guitar to?",
+                p_ans: ["Joey", "Ross", "Monica", "Rachel"],
+                c_ans: "Joey"
+            },
+            Q10: {
+                question: "How did Ross find out about Monica and Chandler?",
+                p_ans: ["He saw them through his apartment window", "They revealed it to him", "He overheard a conversation between them on the phone.", "He accidentally heard a message, left by Chandler, on Monica's answering machine"],
+                c_ans: ""
+            },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </script>
 
 
 
     <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
