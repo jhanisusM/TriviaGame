@@ -35,9 +35,6 @@
                         <a class="nav-link" href="#" id="pause">Pause</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" id="end">End</a>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="#" id="reset">Reset</a>
                     </li>
                 </ul>
@@ -46,7 +43,7 @@
     </nav>
 
     <!-- Page Content -->
-    <div class="jumbotron" style="background-color: rgba(255, 255, 255, .35); text-align:center">
+    <div class="jumbotron" style="background-color: rgba(255, 255, 255, .35); text-align:center; margin:auto;">
         <h1 class="display-4">Totally Trivial Trivia!</h1>
         <hr>
         <div class="container">
@@ -54,23 +51,27 @@
                 <div class="col-12" id="countdown_display">
                     <p> This is where the timer will go </p>
                 </div>
+                <div class="col-12" id="start_main">
+                    <button type="button" class="btn btn-success">Start</button>
+                </div>
                 <div class="col-12">
-                    <div class="alert alert-secondary" role="alert" id="q_display">
-                        <p> This is where the question will go </p>
-                    </div>
+                    <div style="background-color: rgba(255, 255, 255, .35)" id="question_display"></div>
+
                 </div>
-                <div class="col-12" id="ans_display">
-                    <p> This is where the different answers will go
-                    </p>
-                    <button type="button" class="btn btn-outline-dark" id="ans_1">1</button>
-                    <button type="button" class="btn btn-outline-dark" id="ans_1">2</button>
-                    <button type="button" class="btn btn-outline-dark" id="ans_1">2</button>
-                    <button type="button" class="btn btn-outline-dark" id="ans_1">3</button>
-                </div>
-                <div class="col-12" id="incorrect">
+                <div class="col-12" id="answers_display"></div>
+                <div class="col-12" id="incorrect_display">
                     <p> will be activated if incorrect + gif </p>
                 </div>
                 <div class="col-12">
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
                     <br>
                     <br>
                     <br>
@@ -91,33 +92,92 @@
         window.onload = function () {
             $("#start").click(TriviaGame.start);
             $("#start_bottom").click(TriviaGame.start);
+            $("#start_main").click(TriviaGame.start);
             $("#pause").click(TriviaGame.pause);
-            $("#end").click();
-            $("#restart").click();
+            $("#reset").click(TriviaGame.restart);
+            $("#countdown_display").empty();
+            $("#question_display").empty();
+            $("#answers_display").empty();
+            $("#incorrect_display").empty();
         }
         // *******CACHE DUMB***************
         var intervalId;
         var clockRunning = false;
         var countDonwNumber = 5;
+        var checkArr = [];
+
+
 
 
 
 
         var TriviaGame = {
+            random_num: 0,
+            //Random function for question 
+            random: function () {
+                TriviaGame.random_num = Math.floor((Math.random() * 10) + 1);
+                console.log("This is the random function value of random is " + TriviaGame.random_num);
+            },
 
+            //Button render
+            renderButtons: function (checker) {
+                for (var i = 0; i < 4; i++) {
+                    var buttonsOfAnswers = $("<button>");
+                    buttonsOfAnswers.addClass("btn btn-outline-dark");
+                    buttonsOfAnswers.attr("data-name", TriviaGame.friends[checker].p_ans[i]);
+                    buttonsOfAnswers.text(TriviaGame.friends[checker].p_ans[i]);
+                    $("#answers_display").append(buttonsOfAnswers);
+                }
+            },
+            //Question generator
+            questionGenerator: function () {
+                TriviaGame.random();
+                var checker = TriviaGame.random_num;
+                console.log("This is question generator");
+                checkArr.push(checker);
+                console.log(checkArr);
+                // if (jQuery.inArray(checker, checkArr) !== -1) {
+                //    }
+                console.log("This is the question in question generator " + TriviaGame.friends[checker].question);
+                $("#question_display").html("<h3>" + TriviaGame.friends[checker].question + "</h3");
+                TriviaGame.renderButtons(checker);
+                TriviaGame.questionChecker();
+            },
+
+            questionChecker : function(){
+                
+
+            },
+
+
+            //Main window
+            mainWindow: function () {
+                $("#start_main").empty();
+                TriviaGame.decrement();
+                TriviaGame.questionGenerator();
+                console.log("Main window Function");
+
+
+
+            },
+
+
+
+            //-------------------------------**********************STOP|PAUSE|RESET FUNCTIONS!************************-------------------------------------
             //Function Initiates the countdown.
             start: function () {
                 if (!clockRunning) {
                     intervalId = setInterval(TriviaGame.decrement, 1000);
+                    clockRunning = true;
                 }
+                TriviaGame.mainWindow();
             },
-
+            // FUnction creats countdown timer
             decrement: function () {
                 countDonwNumber--;
                 $("#countdown_display").html("<h3>" + countDonwNumber + "</h3>");
                 if (countDonwNumber === 0) {
                     TriviaGame.stop();
-                    console.log("ON");
                 }
             },
             //function stops the clock from running 
@@ -125,112 +185,65 @@
                 clearInterval(intervalId);
                 clockRunning = false;
             },
-
+            //Function HARD stops the clock
             stop: function () {
                 clearInterval(intervalId);
-                console.log("STOP!")
+                clockRunning = false;
+                countDonwNumber = 5; //<----------------------------------------CountDown Number!
+                TriviaGame.checkArr = [];
             },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            fiends: function () {
-
+            //Function resets all parameters
+            restart: function () {
+                TriviaGame.stop();
+                $("#countdown_display").empty();
+                clockRunning = false;
+                var countDonwNumber = 5; //<----------------------------------------CountDown Number!
             },
-            Q1: {
-                question: "What is Ross' career?",
-                p_ans: ["Veterinarian", "Architect", "Paleontologist", "Author"],
-                c_ans: "Paleontologist"
-            },
-            Q2: {
-                question: "Which friend left their fiancé at the altar on their wedding day?",
-                p_ans: ["Phoebe", "Chandler", "Rachel", "Monica"],
-                c_ans: "Rachel"
-            },
-            Q3: {
-                question: "How many times has Ross been married?",
-                p_ans: ["Never", "2", "3", "1"],
-                c_ans: "3"
-            },
-            Q4: {
-                question: "Who was the only character out of the six friends who never married?",
-                p_ans: ["Phoebe", "Joey", "Chandler", "Monica"],
-                c_ans: "Joey"
-            },
-            Q5: {
-                question: "Which Friend did Gunther have a crush on?",
-                p_ans: ["Phoebe", "Chandler", "Monica", "Rachel"],
-                c_ans: "Rachel"
-            },
-            Q6: {
-                question: "Which Friend dated a girl with a prosthetic leg?",
-                p_ans: ["Joey", "both Joey and Chandler", "Chandler", "Ross"],
-                c_ans: "Both Joey and Chandler"
-            },
-            Q7: {
-                question: "What is the name of Ross' monkey?",
-                p_ans: ["Marvel", "Marcel", "Mark", "Hammy"],
-                c_ans: "Marcel"
-            },
-            Q8: {
-                question: "Which of the following was never a romantic couple?",
-                p_ans: ["Ross & Monica", "Phoebe & Mike", "Monica & Chandler", "Ross & Rachel"],
-                c_ans: "Phoebe & Mike"
-            },
-            Q9: {
-                question: "Which Friend did Phoebe try to teach guitar to?",
-                p_ans: ["Joey", "Ross", "Monica", "Rachel"],
-                c_ans: "Joey"
-            },
-            Q10: {
-                question: "How did Ross find out about Monica and Chandler?",
-                p_ans: ["He saw them through his apartment window", "They revealed it to him", "He overheard a conversation between them on the phone.", "He accidentally heard a message, left by Chandler, on Monica's answering machine"],
-                c_ans: ""
-            },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            //---------------------------------------------------------------------QUERIES--------------------------------------------------------
+            //*****************************FRIENDS QUERIES*******************************
+            friends: [
+                {
+                    question: "What is Ross' career?",
+                    p_ans: ["Veterinarian", "Architect", "Paleontologist", "Author"],
+                    c_ans: "Paleontologist",
+                }, {
+                    question: "Which friend left their fiancé at the altar on their wedding day?",
+                    p_ans: ["Phoebe", "Chandler", "Rachel", "Monica"],
+                    c_ans: "Rachel",
+                }, {
+                    question: "How many times has Ross been married?",
+                    p_ans: ["Never", "2", "3", "1"],
+                    c_ans: "3",
+                }, {
+                    question: "Who was the only character out of the six friends who never married?",
+                    p_ans: ["Phoebe", "Joey", "Chandler", "Monica"],
+                    c_ans: "Joey",
+                }, {
+                    question: "Which Friend did Gunther have a crush on?",
+                    p_ans: ["Phoebe", "Chandler", "Monica", "Rachel"],
+                    c_ans: "Rachel",
+                }, {
+                    question: "Which Friend dated a girl with a prosthetic leg?",
+                    p_ans: ["Joey", "both Joey and Chandler", "Chandler", "Ross"],
+                    c_ans: "Both Joey and Chandler",
+                }, {
+                    question: "What is the name of Ross' monkey?",
+                    p_ans: ["Marvel", "Marcel", "Mark", "Hammy"],
+                    c_ans: "Marcel",
+                }, {
+                    question: "Which of the following was never a romantic couple?",
+                    p_ans: ["Ross & Monica", "Phoebe & Mike", "Monica & Chandler", "Ross & Rachel"],
+                    c_ans: "Phoebe & Mike",
+                }, {
+                    question: "Which Friend did Phoebe try to teach guitar to?",
+                    p_ans: ["Joey", "Ross", "Monica", "Rachel"],
+                    c_ans: "Joey",
+                }, {
+                    question: "How did Ross find out about Monica and Chandler?",
+                    p_ans: ["He saw them through his apartment window", "They revealed it to him", "He overheard a conversation between them on the phone.", "He accidentally heard a message, left by Chandler, on Monica's answering machine"],
+                    c_ans: "He saw them through his apartment window",
+                }],
         };
-
-
-
-
-
-
-
-
-
-
 
 
 
