@@ -43,162 +43,151 @@
     </nav>
 
     <!-- Page Content -->
-    <div class="jumbotron" style="background-color: rgba(255, 255, 255, .35); text-align:center; margin:auto;">
+    <div class="jumbotron" style="background-color: rgba(255, 255, 255, .35); text-align:center; height:780px;  overflow: hidden;">
         <h1 class="display-4">Totally Trivial Trivia!</h1>
         <hr>
         <div class="container">
             <div class="row">
                 <div class="col-12" id="countdown_display">
-                    <p> This is where the timer will go </p>
+                    <p> </p>
                 </div>
                 <div class="col-12" id="start_main">
                     <button type="button" class="btn btn-success">Start</button>
                 </div>
                 <div class="col-12">
                     <div style="background-color: rgba(255, 255, 255, .35)" id="question_display"></div>
-
                 </div>
                 <div class="col-12" id="answers_display"></div>
                 <div class="col-12" id="incorrect_display">
-                    <p> will be activated if incorrect + gif </p>
+                    <p></p>
                 </div>
                 <div class="col-12">
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
+
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-
         //  Click events for buttons
         window.onload = function () {
-            $("#start").click(TriviaGame.start);
-            $("#start_bottom").click(TriviaGame.start);
-            $("#start_main").click(TriviaGame.start);
-            $("#pause").click(TriviaGame.pause);
-            $("#reset").click(TriviaGame.restart);
+            $("#start").click(main);
+            $("#start_main").click(start, main);
+            $("#start_bottom").click(main);
+            $("#pause").click(pause);
+            $("#reset").click(restart);
             $("#countdown_display").empty();
-            $("#question_display").empty();
+            $("#question_display").click(truthSeeker);
             $("#answers_display").empty();
             $("#incorrect_display").empty();
         }
         // *******CACHE DUMB***************
         var intervalId;
         var clockRunning = false;
-        var countDonwNumber = 5;
+        var countDonwNumber = 5; //<----------------------------------------CountDown Number!
+        var random_num = 0;
         var checkArr = [];
 
+        function main() {
+            start();
+            $("#start_main").empty();
+            $("#answers_display").empty();
+            decrement();
+            questionGenerator();
+            console.log("Main window Function");
+            truthSeeker();
 
+        };
+
+        function truthSeeker() {
+            document.onclick = function(event){
+                var user = event.click;
+            }
+            console.log("THis is activated. click event is "+ turthSeeker.user);
+        };
+
+// <!-- 
+//         $("#answers_display").on("click", function (event) {
+//             event.preventDefault();
+//             var userAns = $(this).attr("data-name");
+//             console.log("THIS IS crazy but here's my number so call me maybe? " + userAns);
+
+
+
+//         }); -->
+
+
+
+        //Random function for question 
+        function random() {
+            random_num = Math.floor((Math.random() * 9) + 1);
+        };
+        //Button render
+        function renderButtons(checker) {
+            for (var i = 0; i < 4; i++) {
+                var buttonsOfAnswers = $("<button>");
+                buttonsOfAnswers.addClass("btn btn-outline-dark");
+                buttonsOfAnswers.attr("data-name", TriviaGame.friends[checker].p_ans[i]);
+                buttonsOfAnswers.text(TriviaGame.friends[checker].p_ans[i]);
+                $("#answers_display").append(buttonsOfAnswers);
+            }
+        };
+
+        function questionGenerator() {
+            random();
+            var checker = random_num;
+            checkArr.push(checker);
+            console.log(checkArr);
+            // if (jQuery.inArray(checker, checkArr) !== -1) {
+            //    }
+            console.log("This is the question in question generator " + TriviaGame.friends[checker].question);
+            $("#question_display").html("<h3>" + TriviaGame.friends[checker].question + "</h3");
+            renderButtons(checker);
+            //console.log("This is question checker ******************** " + TriviaGame.userAns);
+            //var userAns = $(this).attr("data-name");
+            // console.log("This is question checker " + userAns);
+        };
+        //-------------------------------**********************STOP|PAUSE|RESET FUNCTIONS!************************-------------------------------------
+        //Function Initiates the countdown.
+        function start() {
+            if (!clockRunning) {
+                intervalId = setInterval(decrement, 1000);
+                clockRunning = true;
+            }
+        };
+        // FUnction creats countdown timer
+
+        function decrement() {
+            countDonwNumber--;
+            $("#countdown_display").html("<h3>" + countDonwNumber + "</h3>");
+            if (countDonwNumber === 0) {
+                stop();
+            }
+        };
+        //function stops the clock from running 
+        function pause() {
+            clearInterval(intervalId);
+            clockRunning = false;
+        };
+        //Function HARD stops the clock
+        function stop() {
+            clearInterval(intervalId);
+            clockRunning = false;
+            countDonwNumber = 5; //<----------------------------------------CountDown Number!
+            checkArr = [];
+        };
+        //Function resets all parameters
+        function restart() {
+            stop();
+            $("#countdown_display").empty();
+            clockRunning = false;
+            var countDonwNumber = 5; //<----------------------------------------CountDown Number!
+        };
 
 
 
 
         var TriviaGame = {
-            random_num: 0,
-            //Random function for question 
-            random: function () {
-                TriviaGame.random_num = Math.floor((Math.random() * 10) + 1);
-                console.log("This is the random function value of random is " + TriviaGame.random_num);
-            },
-
-            //Button render
-            renderButtons: function (checker) {
-                for (var i = 0; i < 4; i++) {
-                    var buttonsOfAnswers = $("<button>");
-                    buttonsOfAnswers.addClass("btn btn-outline-dark");
-                    buttonsOfAnswers.attr("data-name", TriviaGame.friends[checker].p_ans[i]);
-                    buttonsOfAnswers.text(TriviaGame.friends[checker].p_ans[i]);
-                    $("#answers_display").append(buttonsOfAnswers);
-                }
-            },
-            //Question generator
-            questionGenerator: function () {
-                TriviaGame.random();
-                var checker = TriviaGame.random_num;
-                console.log("This is question generator");
-                checkArr.push(checker);
-                console.log(checkArr);
-                // if (jQuery.inArray(checker, checkArr) !== -1) {
-                //    }
-                console.log("This is the question in question generator " + TriviaGame.friends[checker].question);
-                $("#question_display").html("<h3>" + TriviaGame.friends[checker].question + "</h3");
-                TriviaGame.renderButtons(checker);
-                TriviaGame.questionChecker();
-            },
-
-            questionChecker : function(){
-                
-
-            },
-
-
-            //Main window
-            mainWindow: function () {
-                $("#start_main").empty();
-                TriviaGame.decrement();
-                TriviaGame.questionGenerator();
-                console.log("Main window Function");
-
-
-
-            },
-
-
-
-            //-------------------------------**********************STOP|PAUSE|RESET FUNCTIONS!************************-------------------------------------
-            //Function Initiates the countdown.
-            start: function () {
-                if (!clockRunning) {
-                    intervalId = setInterval(TriviaGame.decrement, 1000);
-                    clockRunning = true;
-                }
-                TriviaGame.mainWindow();
-            },
-            // FUnction creats countdown timer
-            decrement: function () {
-                countDonwNumber--;
-                $("#countdown_display").html("<h3>" + countDonwNumber + "</h3>");
-                if (countDonwNumber === 0) {
-                    TriviaGame.stop();
-                }
-            },
-            //function stops the clock from running 
-            pause: function () {
-                clearInterval(intervalId);
-                clockRunning = false;
-            },
-            //Function HARD stops the clock
-            stop: function () {
-                clearInterval(intervalId);
-                clockRunning = false;
-                countDonwNumber = 5; //<----------------------------------------CountDown Number!
-                TriviaGame.checkArr = [];
-            },
-            //Function resets all parameters
-            restart: function () {
-                TriviaGame.stop();
-                $("#countdown_display").empty();
-                clockRunning = false;
-                var countDonwNumber = 5; //<----------------------------------------CountDown Number!
-            },
             //---------------------------------------------------------------------QUERIES--------------------------------------------------------
             //*****************************FRIENDS QUERIES*******************************
             friends: [
