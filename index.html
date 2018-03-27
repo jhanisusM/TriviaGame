@@ -76,10 +76,10 @@
             $("#start_bottom").click(main);
             $("#pause").click(pause);
             $("#reset").click(restart);
-            $("#countdown_display").empty();
-            $("#question_display").click(truthSeeker);
-            $("#answers_display").empty();
-            $("#incorrect_display").empty();
+            //$("#countdown_display").empty();
+            // //$("#question_display").click(truthSeeker);
+            // $("#answers_display").empty();
+            // $("#incorrect_display").empty();
         }
         // *******CACHE DUMB***************
         var intervalId;
@@ -88,33 +88,26 @@
         var random_num = 0;
         var checkArr = [];
 
+        //Main Function
         function main() {
             start();
             $("#start_main").empty();
             $("#answers_display").empty();
             decrement();
             questionGenerator();
-            console.log("Main window Function");
-            truthSeeker();
-
+            console.log("Inside Main window Function");
+            ansChecker();
         };
 
-        function truthSeeker() {
-            document.onclick = function(event){
-                var user = event.click;
-            }
-            console.log("THis is activated. click event is "+ turthSeeker.user);
+        function ansChecker() {
+            $("#answers_display").on("click", function (event) {
+                var respuesta = $(this).attr("data-name");
+                $(ansChecker.respuesta).val();
+                console.log("Inside ansChecker. THis is respuesta " + ansChecker.respuesta);
+                //console.log($(this).attr("data-name", "value"));
+
+            });
         };
-
-// <!-- 
-//         $("#answers_display").on("click", function (event) {
-//             event.preventDefault();
-//             var userAns = $(this).attr("data-name");
-//             console.log("THIS IS crazy but here's my number so call me maybe? " + userAns);
-
-
-
-//         }); -->
 
 
 
@@ -128,25 +121,28 @@
                 var buttonsOfAnswers = $("<button>");
                 buttonsOfAnswers.addClass("btn btn-outline-dark");
                 buttonsOfAnswers.attr("data-name", TriviaGame.friends[checker].p_ans[i]);
+                //console.log($(this).attr("data-name"  ,"value" ));
                 buttonsOfAnswers.text(TriviaGame.friends[checker].p_ans[i]);
                 $("#answers_display").append(buttonsOfAnswers);
             }
         };
-
+        //Function Generates questions
         function questionGenerator() {
             random();
             var checker = random_num;
             checkArr.push(checker);
-            console.log(checkArr);
+            console.log("Inside question generator. This is my array"+ checkArr);
             // if (jQuery.inArray(checker, checkArr) !== -1) {
             //    }
             console.log("This is the question in question generator " + TriviaGame.friends[checker].question);
             $("#question_display").html("<h3>" + TriviaGame.friends[checker].question + "</h3");
             renderButtons(checker);
-            //console.log("This is question checker ******************** " + TriviaGame.userAns);
-            //var userAns = $(this).attr("data-name");
-            // console.log("This is question checker " + userAns);
         };
+
+
+
+
+
         //-------------------------------**********************STOP|PAUSE|RESET FUNCTIONS!************************-------------------------------------
         //Function Initiates the countdown.
         function start() {
