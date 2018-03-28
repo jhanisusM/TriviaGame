@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>TriviaGame!</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
+    <!-- <link rel="stylesheet" type="text/css" media="screen" href="main.css" /> -->
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
@@ -57,8 +57,8 @@
                 <div class="col-12">
                     <div style="background-color: rgba(255, 255, 255, .35)" id="question_display"></div>
                 </div>
-                <div class="col-12" id="answers_display"></div>
-                <div class="col-12" id="incorrect_display">
+                <div class="col-11" id="answers_display"></div>
+                <div class="col-12" id="yaynay_display">
                     <p></p>
                 </div>
                 <div class="col-12">
@@ -76,20 +76,24 @@
             $("#start_bottom").click(main);
             $("#pause").click(pause);
             $("#reset").click(restart);
-            //$("#countdown_display").empty();
-            // //$("#question_display").click(truthSeeker);
-            // $("#answers_display").empty();
-            // $("#incorrect_display").empty();
         }
         // *******CACHE DUMB***************
+        //countdown 
+        var x = 10;
         var intervalId;
+
         var clockRunning = false;
-        var countDonwNumber = 5; //<----------------------------------------CountDown Number!
+        var excitedState = false;
+        var countDonwNumber = x;
         var random_num = 0;
         var checkArr = [];
+        var yay, nay, count = 0;
 
         //Main Function
         function main() {
+
+            // do {
+            // for (var i = 0; i < 10; i++) {
             start();
             $("#start_main").empty();
             $("#answers_display").empty();
@@ -97,15 +101,68 @@
             questionGenerator();
             console.log("Inside Main window Function");
             ansChecker();
+            waitFucntion();
+           // alto();
+            // };
+            // }
+            // while (excitedState != true)
         };
 
-        function ansChecker() {
-            $("#answers_display").on("click", function (event) {
-                var respuesta = $(this).attr("data-name");
-                $(ansChecker.respuesta).val();
-                console.log("Inside ansChecker. THis is respuesta " + ansChecker.respuesta);
-                //console.log($(this).attr("data-name", "value"));
+        function waitFucntion() {
+            setTimeout(function () {
+                console.log('after');
+            }, 500);
+        };
+        //Function sums up total score 
+        function alto() {
+            if (count == 10) {
+                $("#countdown_display").empty();
+                $("#question_display").empty();
+                $("#answers_display").empty();
+                $("#incorrect_display").empty();
+                clearInterval(intervalId);
+                clockRunning = false;
+                $("#countdown_display").text("Total Score:");
+                $("#question_display").text("Correct guesses :" + yay);
+                $("#answers_display").text("Incorrect guesses " + nay);
+                if (yay > nay) {
+                    $("#incorrect_display").text("YOU WON!");
+                }
+                else {
+                    $("#incorrect_display").text("YOU LOST");
+                }
+            }
+            else {
+                main();
+            }
 
+        };
+
+
+
+
+        //Function Checks answers!!! 
+        function ansChecker() {
+            count++;
+            $("#answers_display").on("click", "button", function (event) {
+                var respuesta = $(this).attr("data-name");
+                console.log("Inside ansChecker. THis is respuesta " + respuesta);
+                console.log($(this).attr("data-name", "value"));
+                console.log("This is random Number value -------------- " + random_num);
+                if (respuesta === TriviaGame.friends[random_num].c_ans) {
+                    $("#yaynay_display").html("<h5> Correct!!!</h5>");
+                    yay++;
+                    correct();
+                    excitedState = true;
+                    console.log("this is yay" + yay);
+                }
+                else {
+                    $("#yaynay_display").html("<h5> Wrong!!!</h5>");
+                    nay++;
+                    console.log("this is nay" + nay);
+                    wrong();
+                    excitedState = true;
+                }
             });
         };
 
@@ -114,6 +171,8 @@
         //Random function for question 
         function random() {
             random_num = Math.floor((Math.random() * 9) + 1);
+            // if (jQuery.inArray(checker, checkArr) !== -1) {
+            //    }
         };
         //Button render
         function renderButtons(checker) {
@@ -121,7 +180,6 @@
                 var buttonsOfAnswers = $("<button>");
                 buttonsOfAnswers.addClass("btn btn-outline-dark");
                 buttonsOfAnswers.attr("data-name", TriviaGame.friends[checker].p_ans[i]);
-                //console.log($(this).attr("data-name"  ,"value" ));
                 buttonsOfAnswers.text(TriviaGame.friends[checker].p_ans[i]);
                 $("#answers_display").append(buttonsOfAnswers);
             }
@@ -131,15 +189,42 @@
             random();
             var checker = random_num;
             checkArr.push(checker);
-            console.log("Inside question generator. This is my array"+ checkArr);
-            // if (jQuery.inArray(checker, checkArr) !== -1) {
-            //    }
+            console.log("Inside question generator. This is my array" + checkArr);
             console.log("This is the question in question generator " + TriviaGame.friends[checker].question);
             $("#question_display").html("<h3>" + TriviaGame.friends[checker].question + "</h3");
             renderButtons(checker);
         };
+        //function displays ajax objects with a gif 
+        function correct() {
+            var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=correct";
+            $.ajax({
+                url: queryURL,
+                method: "GET",
+                // async: false,
+            }).then(function (response) {
+                var imageUrl = response.data.image_original_url;
+                var correctImage = $("<img>");
+                correctImage.attr("src", imageUrl);
+                correctImage.attr("alt", "Correct Image");
+                $("#yaynay_display").prepend(correctImage);
+            });
+        }
 
-
+        //function displays ajax objects with a gif 
+        function wrong() {
+            var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=wrong";
+            $.ajax({
+                url: queryURL,
+                method: "GET",
+                // async: false,
+            }).then(function (response) {
+                var imageUrl = response.data.image_original_url;
+                var wrongImage = $("<img>");
+                wrongImage.attr("src", imageUrl);
+                wrongImage.attr("alt", "Correct Image");
+                $("#yaynay_display").prepend(wrongImage);
+            });
+        };
 
 
 
@@ -158,6 +243,7 @@
             $("#countdown_display").html("<h3>" + countDonwNumber + "</h3>");
             if (countDonwNumber === 0) {
                 stop();
+                excitedState = true;
             }
         };
         //function stops the clock from running 
@@ -169,15 +255,15 @@
         function stop() {
             clearInterval(intervalId);
             clockRunning = false;
-            countDonwNumber = 5; //<----------------------------------------CountDown Number!
-            checkArr = [];
+            countDonwNumber = x;
+            excitedState = true;
         };
         //Function resets all parameters
         function restart() {
             stop();
             $("#countdown_display").empty();
             clockRunning = false;
-            var countDonwNumber = 5; //<----------------------------------------CountDown Number!
+            var countDonwNumber = x;
         };
 
 
@@ -238,9 +324,7 @@
 
 
     <!-- Bootstrap core JavaScript -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
         crossorigin="anonymous"></script>
