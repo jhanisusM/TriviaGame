@@ -95,9 +95,7 @@
 
         //Main Function
         function main() {
-
-            count++;
-            console.log("THis is count   --- " + count);
+            // for (i = 0; i < 10; i++) {
             start();
             clear();
             decrement();
@@ -105,7 +103,7 @@
             ansChecker();
             wait();
             alto();
-            
+            // }
             //clear();
         };
 
@@ -117,7 +115,7 @@
             $("#start_main").empty();
             $("#answers_display").empty();
             $("#yaynay_display").empty();
-            // $("#countdown_display").empty();
+            $("#countdown_display").empty();
             // $("#question_display").empty();
         };
 
@@ -133,12 +131,14 @@
                     console.log("THis is yay   --- " + yay);
                     correct();
                     $("#yaynay_display").empty();
+                    pause();
                 }
                 else {
                     nay++;
                     console.log("THis is nay   --- " + nay);
                     wrong();
                     $("#yaynay_display").empty();
+                    pause();
                 }
             });
 
@@ -146,12 +146,15 @@
 
         function wait() {
             setTimeout(function () {
-                start();
+                restart();
                 clear();
+                start();
                 decrement();
                 questionGenerator();
-               
-            }, 10000);
+                alto();
+                wait();
+                // ansChecker();
+            }, 7000);
         };
 
         // Random function for question 
@@ -159,6 +162,8 @@
             var arbitrario = Math.floor((Math.random() * 9) + 1);
             if (jQuery.inArray(arbitrario, checkArr) == -1) {
                 checkArr.push(arbitrario);
+                count++;
+                console.log("THis is count   --- " + count);
                 random_num = arbitrario;
                 console.log("This is my current array  ----- " + checkArr);
             }
@@ -185,19 +190,18 @@
         };
         //function displays ajax objects with a gif 
         function correct() {
-            $("#yaynay_display").empty();
-            $("#yaynay_display").append("<h5> Correct!!!</h5>");
+
             var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=correct";
             $.ajax({
                 url: queryURL,
                 method: "GET",
                 // async: false,
             }).then(function (response) {
-
                 var imageUrl = response.data.image_original_url;
                 var correctImage = $("<img>");
                 correctImage.attr("src", imageUrl);
                 correctImage.attr("alt", "Correct Image");
+                $("#yaynay_display").prepend("<h5> Correct!!!</h5>");
                 $("#yaynay_display").append(correctImage);
                 // $("#yaynay_display").empty();
             });
@@ -205,19 +209,17 @@
 
         //function displays ajax objects with a gif 
         function wrong() {
-            $("#yaynay_display").empty();
-            $("#yaynay_display").append("<h5> Wrong!!!</h5>");
             var queryURL = "https://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=wrong";
             $.ajax({
                 url: queryURL,
                 method: "GET",
                 // async: false,
             }).then(function (response) {
-
                 var imageUrl = response.data.image_original_url;
                 var wrongImage = $("<img>");
                 wrongImage.attr("src", imageUrl);
                 wrongImage.attr("alt", "Correct Image");
+                $("#yaynay_display").prepend("<h5> Wrong!!!</h5>");
                 $("#yaynay_display").append(wrongImage);
                 //   $("#yaynay_display").empty();
             });
@@ -226,7 +228,7 @@
 
         //Function sums up total score 
         function alto() {
-            if (count > 10) {
+            if (count == 10) {
 
                 clearInterval(intervalId);
                 clockRunning = false;
@@ -323,7 +325,7 @@
         //Function resets all parameters
         function restart() {
             stop();
-            $("#countdown_display").empty();
+            // $("#countdown_display").empty();
             clockRunning = false;
             var countDonwNumber = x;
         };
