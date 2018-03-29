@@ -44,29 +44,29 @@
 
     <!-- Page Content -->
     <div class="jumbotron" style="background-color: rgba(255, 255, 255, .35); text-align:center; height:780px;  overflow: hidden;">
-            <h1 class="display-4">Totally Trivial Trivia!</h1>
-            <hr>
-            <div class="container">
-                <div class="row">
-                    <div class="col-12" id="countdown_display">
-                        <p> </p>
-                    </div>
-                    <div class="col-12" id="start_main">
-                        <button type="button" class="btn btn-success">Start</button>
-                    </div>
-                    <div class="col-12">
-                        <div style="background-color: rgba(255, 255, 255, .35)" id="question_display"></div>
-                    </div>
-                    <div class="col-11" id="answers_display"></div>
-                    <div class="col-12" id="yaynay_display">
-                        <p></p>
-                    </div>
-                    <div class="col-12">
-    
-                    </div>
+        <h1 class="display-4">Totally Trivial Trivia!</h1>
+        <hr>
+        <div class="container">
+            <div class="row">
+                <div class="col-12" id="countdown_display">
+                    <p> </p>
+                </div>
+                <div class="col-12" id="start_main">
+                    <button type="button" class="btn btn-success">Start</button>
+                </div>
+                <div class="col-12">
+                    <div style="background-color: rgba(255, 255, 255, .35)" id="question_display"></div>
+                </div>
+                <div class="col-11" id="answers_display"></div>
+                <div class="col-12" id="yaynay_display">
+                    <p></p>
+                </div>
+                <div class="col-12">
+
                 </div>
             </div>
         </div>
+    </div>
 
     <script>
         //  Click events for buttons
@@ -99,12 +99,14 @@
             count++;
             console.log("THis is count   --- " + count);
             start();
-           // clear();
+            clear();
             decrement();
             questionGenerator();
             ansChecker();
+            wait();
+            alto();
+            
             //clear();
-            //alto();
         };
 
 
@@ -114,7 +116,7 @@
         function clear() {
             $("#start_main").empty();
             $("#answers_display").empty();
-           // $("#yaynay_display").empty();
+            $("#yaynay_display").empty();
             // $("#countdown_display").empty();
             // $("#question_display").empty();
         };
@@ -139,12 +141,17 @@
                     $("#yaynay_display").empty();
                 }
             });
+
         };
 
         function wait() {
             setTimeout(function () {
-                main();
-            }, 3000);
+                start();
+                clear();
+                decrement();
+                questionGenerator();
+               
+            }, 10000);
         };
 
         // Random function for question 
@@ -191,7 +198,7 @@
                 var correctImage = $("<img>");
                 correctImage.attr("src", imageUrl);
                 correctImage.attr("alt", "Correct Image");
-                $("#yaynay_display").append( correctImage);
+                $("#yaynay_display").append(correctImage);
                 // $("#yaynay_display").empty();
             });
         }
@@ -219,7 +226,7 @@
 
         //Function sums up total score 
         function alto() {
-            if (count == 10) {
+            if (count > 10) {
 
                 clearInterval(intervalId);
                 clockRunning = false;
@@ -232,10 +239,6 @@
                 else {
                     $("#incorrect_display").text("YOU LOST");
                 }
-
-            }
-            else {
-            wait();
 
             }
         };
