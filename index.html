@@ -87,24 +87,19 @@
         var countDonwNumber = x;
         var random_num = 0;
         var checkArr = [];
-        var arrStatus = false;
         var count = 0;
         var yay = 0;
         var nay = 0;
-        var chokePoint = false;
+
 
         //Main Function
         function main() {
-            // for (i = 0; i < 10; i++) {
             start();
             clear();
             decrement();
             questionGenerator();
             ansChecker();
             wait();
-            alto();
-            // }
-            //clear();
         };
 
 
@@ -143,7 +138,29 @@
             });
 
         };
+        //Function coleatly shuts down game 
+        function pararTodo() {
+            $("#start_main").empty();
+            $("#answers_display").empty();
+            $("#yaynay_display").empty();
+            $("#countdown_display").empty();
+            $("#question_display").empty();
+            stop();
+            pause();
+            random_num = 0;
+            clockRunning = false;
+            excitedState = false;
+            countDonwNumber = x;
+            random_num = 0;
+            checkArr = [];
+            arrStatus = false;
+            count = 0;
+            yay = 0;
+            nay = 0;
+            x = 0;
+        };
 
+        //function is recursive 
         function wait() {
             setTimeout(function () {
                 restart();
@@ -160,13 +177,13 @@
         // Random function for question 
         function random() {
             var arbitrario = Math.floor((Math.random() * 9) + 1);
-            if (jQuery.inArray(arbitrario, checkArr) == -1) {
-                checkArr.push(arbitrario);
-                count++;
-                console.log("THis is count   --- " + count);
-                random_num = arbitrario;
-                console.log("This is my current array  ----- " + checkArr);
-            }
+            // if (jQuery.inArray(arbitrario, checkArr) == -1) {
+            checkArr.push(arbitrario);
+            count++;
+            console.log("THis is count   --- " + count);
+            random_num = arbitrario;
+            console.log("This is my current array  ----- " + checkArr);
+            // }
             //random_num = Math.floor((Math.random() * 9) + 1);
             // if (jQuery.inArray(arbitro, checkArr) > -1) {
         };
@@ -225,11 +242,9 @@
             });
         };
 
-
         //Function sums up total score 
         function alto() {
             if (count == 10) {
-
                 clearInterval(intervalId);
                 clockRunning = false;
                 $("#countdown_display").text("Total Score:");
@@ -237,60 +252,15 @@
                 $("#answers_display").text("Incorrect guesses " + nay);
                 if (yay > nay) {
                     $("#incorrect_display").text("YOU WON!");
+                    pararTodo();
                 }
                 else {
                     $("#incorrect_display").text("YOU LOST");
+                    pararTodo();
                 }
-
+                
             }
         };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         //-------------------------------**********************STOP|PAUSE|RESET FUNCTIONS!************************-------------------------------------
         //Function Initiates the countdown.
@@ -329,9 +299,6 @@
             clockRunning = false;
             var countDonwNumber = x;
         };
-
-
-
 
         var TriviaGame = {
             //---------------------------------------------------------------------QUERIES--------------------------------------------------------
@@ -379,8 +346,6 @@
                     c_ans: "He saw them through his apartment window",
                 }],
         };
-
-
 
 
     </script>
